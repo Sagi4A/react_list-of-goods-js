@@ -21,8 +21,8 @@ export const App = () => {
   const [sortType, setSortType] = useState(null);
   const [isReversed, setIsReversed] = useState(false);
 
-  const applySort = (type) => {
-    let sortedGoods = [...goodsFromServer];
+  const applySort = type => {
+    const sortedGoods = [...goodsFromServer];
 
     if (type === 'alphabetically') {
       sortedGoods.sort((a, b) => a.localeCompare(b));
@@ -39,8 +39,8 @@ export const App = () => {
   };
 
   const toggleReverse = () => {
-  setGoods((prevGoods) => [...prevGoods].reverse());
-  setIsReversed((prev) => !prev);
+    setGoods(prevGoods => [...prevGoods].reverse());
+    setIsReversed(prev => !prev);
   };
 
   const reset = () => {
@@ -49,60 +49,59 @@ export const App = () => {
     setIsReversed(false);
   };
 
-  const isOriginalOrder =
-    goods.join(',') === goodsFromServer.join(',') && !isReversed;
+  const isModified = sortType !== null || isReversed;
 
     return (
-    <div className="section content">
-      <div className="buttons">
-        <button
-          type="button"
-          className={cn('button is-info', {
-            'is-light': sortType !== 'alphabetically',
-          })}
-          onClick={() => applySort('alphabetically')}
-        >
-          Sort alphabetically
-        </button>
-        <button
-          type="button"
-          className={cn('button is-success', {
-            'is-light': sortType !== 'length',
-          })}
-          onClick={() => applySort('length')}
-        >
-          Sort by length
-        </button>
-        <button
-          type="button"
-          className={cn('button is-warning', {
-            'is-light': !isReversed,
-          })}
-          onClick={toggleReverse}
-        >
-          Reverse
-        </button>
-        {!isOriginalOrder && (
+      <div className="section content">
+        <div className="buttons">
           <button
             type="button"
-            className="button is-danger"
-            onClick={reset}
+            className={cn('button is-info', {
+              'is-light': sortType !== 'alphabetically',
+            })}
+            onClick={() => applySort('alphabetically')}
           >
-            Reset
+            Sort alphabetically
           </button>
-        )}
-      </div>
 
-      <ul>
-        {goods.map(good => (
-          <li
-            data-cy="Good"
-            key={good}
+          <button
+            type="button"
+            className={cn('button is-success', {
+              'is-light': sortType !== 'length',
+            })}
+            onClick={() => applySort('length')}
           >
-            {good}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+            Sort by length
+          </button>
+
+          <button
+            type="button"
+            className={cn('button is-warning', {
+              'is-light': !isReversed,
+            })}
+            onClick={toggleReverse}
+          >
+            Reverse
+          </button>
+
+          {isModified && (
+            <button
+              type="button"
+              className="button is-danger"
+              onClick={reset}
+            >
+              Reset
+            </button>
+          )}
+        </div>
+
+        <ul>
+          {goods.map(good => (
+            <li data-cy="Good" key={good}>
+              {good}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
 };
